@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnrollmentInterestSpike", "EnrollmentInterestSpike\EnrollmentInterestSpike.csproj", "{BA37E66F-5663-426D-8A2C-1B52EB28B95E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA37E66F-5663-426D-8A2C-1B52EB28B95E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA37E66F-5663-426D-8A2C-1B52EB28B95E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA37E66F-5663-426D-8A2C-1B52EB28B95E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA37E66F-5663-426D-8A2C-1B52EB28B95E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
