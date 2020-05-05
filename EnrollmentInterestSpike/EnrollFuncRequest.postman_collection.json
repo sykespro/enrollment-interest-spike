@@ -1,0 +1,39 @@
+{
+	"info": {
+		"_postman_id": "795fa8da-f3b1-47fa-9b06-cb4a7ef72d65",
+		"name": "EnrollFuncRequest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "OnEnrollInterestRecieved",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"facility\": \"{{$randomCompanyName}}\",\n    \"firstname\": \"{{$randomFirstName}}\",\n    \"lastname\": \"{{$randomLastName}}\",\n    \"dateOfAdmission\": \"04/10/2020\",\n    \"gender\": \"Male\",\n    \"dob\": \"02/18/1950\",\n    \"ssn\": \"123121234\",\n    \"phone\": \"{{$randomPhoneNumber}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"station\": \"{{$randomColor}}\",\n    \"room\": \"{{$randomNameSuffix}}{{$randomInt}}\",\n    \"bed\": \"{{$randomInt}}\",\n    \"medicaidPlanNumber\": \"{{$randomBankAccount}}\",\n    \"MedicarePlanNumber\": \"{{$randomBankAccount}}\",\n    \"PrivateInsuranceCarrier\":\"{{$randomCompanyName}}\",\n    \"CardNumber\": \"{{$randomBankAccount}}\",\n    \"EffectiveDate\": \"05/1/2020\",\n    \"InsuranceIDNumber\":\"{{$randomNameSuffix}}{{$randomBankAccount}}\",\n    \"InsuranceGroupNumber\": \"G{{$randomBankAccount}}\",\n    \"InsurancePhone\": \"{{$randomPhoneNumber}}\",\n    \"bin\": \"{{$randomCreditCardMask}}\",\n    \"pcn\": \"{{$randomCreditCardMask}}\",\n    \"rpFirstname\": \"{{$randomFirstName}}\",\n    \"rpLastname\": \"{{$randomLastName}}\",\n    \"relationship\": \"Son\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"rpPhone\": \"{{$randomPhoneNumber}}\",\n    \"rpEmail\": \"{{$randomEmail}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:7071/api/OnEnrollInterestRecieved\n",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"OnEnrollInterestRecieved\n"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
