@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using iTextSharp.text.pdf;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -10,12 +11,19 @@ namespace EnrollmentInterestSpike
     public static class GenerateInterestDocument
     {
         [FunctionName("GenerateInterestDocument")]
-        public static void Run([QueueTrigger("interest-submission",
+        public static async Task Run([QueueTrigger("interest-submission",
             Connection = "AzureWebJobsStorage")]ResidentInterestInput interest,
+            IBinder binder,
             [Blob("resources/interest-form.pdf", FileAccess.Read)] Stream template,
-            [Blob("interest-submission/test.pdf", FileAccess.Write)] Stream interestOutputDoc,
             ILogger log)
         {
+
+            var interestOutputDoc = await binder.BindAsync<Stream>(
+                new BlobAttribute($"interest-submission/{interest.Firstname.ToLower()}_{interest.Lastname.ToLower()}.pdf", FileAccess.Write)
+                {
+                    Connection = "AzureWebJobsStorage"
+                    
+                });
 
             // Open existing PDF
             var pdfReader = new PdfReader(template);
@@ -24,7 +32,7 @@ namespace EnrollmentInterestSpike
             var stamper = new PdfStamper(pdfReader, interestOutputDoc);
 
             var form = stamper.AcroFields;
-            form.GenerateAppearances = true;          
+            form.GenerateAppearances = true;
 
             form.SetField("prescriber", "");
             form.SetField("facilityname", interest.Facility);
@@ -67,7 +75,7 @@ namespace EnrollmentInterestSpike
 
             stamper.Close();
             pdfReader.Close();
-      
+
             log.LogInformation($"New interest from was generated for {interest.Firstname} {interest.Lastname}");
         }
     }
