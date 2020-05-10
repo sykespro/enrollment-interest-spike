@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using EnrollmentInterestSpike.Models;
 using iTextSharp.text.pdf;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
 namespace EnrollmentInterestSpike
@@ -15,14 +15,16 @@ namespace EnrollmentInterestSpike
             Connection = "AzureWebJobsStorage")]ResidentInterestInput interest,
             IBinder binder,
             [Blob("resources/interest-form.pdf", FileAccess.Read)] Stream template,
+            [Table("submissions")] IAsyncCollector<Submission> submissionTable,
             ILogger log)
         {
+            string documentOutputName = $"interest-submission/{interest.Firstname.ToLower()}_{interest.Lastname.ToLower()}.pdf";
 
             var interestOutputDoc = await binder.BindAsync<Stream>(
-                new BlobAttribute($"interest-submission/{interest.Firstname.ToLower()}_{interest.Lastname.ToLower()}.pdf", FileAccess.Write)
+                new BlobAttribute(documentOutputName, FileAccess.Write)
                 {
                     Connection = "AzureWebJobsStorage"
-                    
+
                 });
 
             // Open existing PDF
@@ -61,14 +63,14 @@ namespace EnrollmentInterestSpike
             form.SetField("insurancePhoneNumber", interest.InsurancePhone);
             form.SetField("pnc", interest.PCN);
             form.SetField("bin", interest.BIN);
-            form.SetField("rpName", "REPLACED!");
-            form.SetField("rpRelationship", "REPLACED!");
-            form.SetField("rpAddress", "REPLACED!");
-            form.SetField("rpCity", "REPLACED!");
-            form.SetField("rpState", "REPLACED!");
-            form.SetField("rpZip", "REPLACED!");
-            form.SetField("rpEmail", "REPLACED!");
-            form.SetField("rpPhone", "REPLACED!");
+            form.SetField("rpName", $"{interest.RPFirstname} {interest.RPLastname}");
+            form.SetField("rpRelationship", interest.Relationship);
+            form.SetField("rpAddress", "");
+            form.SetField("rpCity", "");
+            form.SetField("rpState", "");
+            form.SetField("rpZip", "");
+            form.SetField("rpEmail", interest.RPEmail);
+            form.SetField("rpPhone", interest.RPPhone);
 
             // "Flatten" the form so it wont be editable/usable anymore
             stamper.FormFlattening = true;
@@ -76,7 +78,20 @@ namespace EnrollmentInterestSpike
             stamper.Close();
             pdfReader.Close();
 
-            log.LogInformation($"New interest from was generated for {interest.Firstname} {interest.Lastname}");
+            // save submission to table storage
+            var submission = new Submission()
+            {
+                PartitionKey = "submissions",
+                RowKey = DateTime.Now.ToString("hmmss"), // hacky-tacky for unique row key :)
+                FacilityName = interest.Facility,
+                ResidentName = $"{interest.Firstname} {interest.Lastname}",
+                ResponsiblePartyName = $"{interest.RPFirstname} {interest.RPLastname}",
+                EnrollmentFormPath = documentOutputName,
+                SubmittedDateTime = DateTime.Now
+            };
+            await submissionTable.AddAsync(submission);
+            
+            log.LogInformation($"New interest form was generated for {interest.Firstname} {interest.Lastname}");
         }
     }
 }
