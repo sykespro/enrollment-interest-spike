@@ -16,6 +16,7 @@ namespace EnrollmentInterestSpike
             IBinder binder,
             [Blob("resources/interest-form.pdf", FileAccess.Read)] Stream template,
             [Table("submissions")] IAsyncCollector<Submission> submissionTable,
+            [Queue("notifications")] IAsyncCollector<Submission> notificationQueue,
             ILogger log)
         {
             string documentOutputName = $"interest-submission/{interest.Firstname.ToLower()}_{interest.Lastname.ToLower()}.pdf";
@@ -90,7 +91,10 @@ namespace EnrollmentInterestSpike
                 SubmittedDateTime = DateTime.Now
             };
             await submissionTable.AddAsync(submission);
-            
+
+            // add to queue for notifications
+            await notificationQueue.AddAsync(submission);
+
             log.LogInformation($"New interest form was generated for {interest.Firstname} {interest.Lastname}");
         }
     }
