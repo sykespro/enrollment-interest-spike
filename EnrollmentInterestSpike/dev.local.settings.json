@@ -1,0 +1,11 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "<add value>",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "SendGrid:ApiKey": "<add value>",
+    "SendGrid:EmailSender": "<add value>",
+    "SendGrid:TestEmailReciever": "<add value>",
+    "Enrollment:DocumentPathUrl": "<add value>"
+  }
+}

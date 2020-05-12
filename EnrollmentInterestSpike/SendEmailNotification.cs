@@ -14,7 +14,7 @@ namespace EnrollmentInterestSpike
              [SendGrid(ApiKey = "SendGrid:ApiKey")] ICollector<SendGridMessage> sender,
             ILogger log)
         {
-            string enrollmentDocUrl = Environment.GetEnvironmentVariable("EnollmentDocumentPath") + submission.EnrollmentFormPath;
+            string enrollmentDocUrl = Environment.GetEnvironmentVariable("Enrollment:DocumentPathUrl") + submission.EnrollmentFormPath;
 
             var message = new SendGridMessage();
             message.From = new EmailAddress(Environment.GetEnvironmentVariable("SendGrid:EmailSender"));
