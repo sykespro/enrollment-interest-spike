@@ -1,0 +1,12 @@
+﻿{
+  "$schema": "http://json.schemastore.org/proxies",
+  "proxies": {
+    "proxyEnrollmentFile": {
+      "matchCondition": {
+        "route": "/enrollment/doc/{*restOfPath}",
+        "methods": [ "GET" ]
+      },
+      "backendUri": "https://enrollspikefuncstorage.blob.core.windows.net/{restOfPath}"
+    }
+  }
+}
